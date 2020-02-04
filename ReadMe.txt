@@ -11,6 +11,6 @@ Responsive tables
 collapses on smaller screens
 Used Datatables for view.
 Used Moment for datetime formatting
-Implemented SoftDelete with a bool IsDeleted so user data is not toatally deleted at the database unless the database admin wants to
+Implemented SoftDelete with a bool IsDeleted so user data is not totally deleted at the database unless the database admin wants to
 
 
