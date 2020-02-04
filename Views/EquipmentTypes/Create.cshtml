@@ -1,0 +1,76 @@
+﻿@model TestEquipment.Models.DataTransferObjects.EquipmentTypeDTO
+
+@{
+    ViewData["Title"] = "Add New Equipment Type";
+}
+
+<h1>Create New Record</h1>
+
+<h4>Equipment Type</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input id="name" placeholder="Enter Name of Equipment Type" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea rows="4" class="form-control" cols="50" id="description" placeholder="Please Enter Description" asp-for="Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" id="create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Styles {
+    <link href="~/css/select2.css" rel="stylesheet" />
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Swal2/sweetalert2.css" rel="stylesheet" />
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"></script>
+    <script src="~/Swal2/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+    $(document).on("click", "#create", function () {
+        var name = $('#name').val();
+        var description = $('#description').val();
+        if (name == "") {
+            Swal.fire({
+                title: 'Enter Name of Equipment Type',
+                text: 'Name is required!',
+                type: 'warning'
+            })
+            return false;
+        }
+        else if (description == "") {
+            Swal.fire({
+                title: 'Describe Equipment Type',
+                text: 'Description is required!',
+                type: 'warning'
+            })
+            return false;
+        } else {
+             Swal.fire({
+                    title: 'Success',
+                    text: 'Equipment Type Added Successfully',
+                    type: 'success'
+                })
+            return true;
+        }
+    })
+    </script>
+}

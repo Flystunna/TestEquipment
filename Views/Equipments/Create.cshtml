@@ -1,0 +1,108 @@
+﻿@model TestEquipment.Models.DataTransferObjects.EquipmentDTO
+@using TestEquipment.Models.Enums
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Add New Equipment</h1>
+
+<h4>Equipment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" placeholder="Enter Equipment Name" id="name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" placeholder="Enter Equipemnt Quantity ()" id="quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" id="status" class="form-control m-input dropdown-select2" asp-items="@(Html.GetEnumSelectList<Status>())">
+                    <option value="" id="Status">Select Vehicle Status</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label"> Equipment Type:</label>
+                @Html.DropDownListFor(model => model.EquipmentTypeId, ViewBag.EquipmentType as SelectList, "Select Equipment Type", new { @class = "form-control m-input dropdown-select2", @id = "EquipmentTypeId" })
+                <span asp-validation-for="EquipmentTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" id="create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+</div>
+@section Styles {
+    <link href="~/css/select2.css" rel="stylesheet" />
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <link href="~/Swal2/sweetalert2.css" rel="stylesheet" />
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.9/js/select2.min.js"></script>
+    <script src="~/Swal2/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".dropdown-select2").select2();
+        });
+        $(document).on("click", "#create", function () {
+            var name = $('#name').val();
+            var quantity = $('#quantity').val();
+            var status = $('#status').val();
+            var type = $('#EquipmentTypeId').val();
+
+            if (name == "") {
+                Swal.fire({
+                    title: 'Input Name of Equipment!',
+                    text: 'Equipment Name is required!',
+                    type: 'warning'
+                })
+                return false;
+            }
+            else if (quantity == "") {
+                Swal.fire({
+                    title: 'Input Quantity of Equipment!',
+                    text: 'Quantity is required!',
+                    type: 'warning'
+                })
+                return false;
+            }
+            else if (status == "") {
+                Swal.fire({
+                    title: 'Input Status of Equipment!',
+                    text: 'Status is required!',
+                    type: 'warning'
+                })
+                return false;
+            }
+                else if (type == "") {
+                Swal.fire({
+                    title: 'Select an Equipment Type',
+                    text: 'Type is required!',
+                    type: 'warning'
+                })
+                return false;
+            }
+            else {
+                  Swal.fire({
+                    title: 'Success',
+                    text: 'Equipment Added Successfully',
+                    type: 'success'
+                })
+                return true;
+            }
+
+        });
+    </script>
+}

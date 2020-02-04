@@ -1,0 +1,200 @@
+﻿@model IEnumerable<TestEquipment.Models.Entities.Equipment>
+
+@{
+    ViewData["Title"] = "List Of Equipments";
+}
+<br/>
+<h1>List Of Equipments</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">
+        <span>
+            <i class="fa fa-plus"></i>
+            <span>Create New</span>
+        </span>
+    </a>
+</p>
+<table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Type Description</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Date Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+</table>
+@section Styles{
+    <style>
+        .dataTables_filter {
+            width: 50%;
+            float: right;
+            text-align: right;
+            margin-right: 1em;
+        }
+    </style>
+}
+<link href="~/lib/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="~/lib/font-awesome.min.css" rel="stylesheet" />
+<link href="~/lib/responsive.bootstrap.min.css" rel="stylesheet" />
+@section scripts
+{
+    <script src="~/lib/jquery.dataTables.min.js"></script>
+    <script src="~/lib/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/responsive.bootstrap.min.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/lib/dataTables.buttons.min.js"></script>
+    <script src="~/lib/buttons.html5.min.js"></script>
+    <script src="~/lib/buttons.print.min.js"></script>
+    <script src="~/lib/buttons.colVis.min.js"></script>
+    <script src="~/lib/pdfmake.js"></script>
+    <script src="~/lib/jszip.min.js"></script>
+    <script>
+        var Popup, dataTable;
+        $(document).ready(function () {
+            dataTable = $("#example").DataTable({
+                "searchable": false,
+                "order": [[0, "asc"]],
+                "width": "150px",
+                "dom": 'lBfrtip',
+                "pageLength": 5,
+                "lengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]],
+                "buttons": [
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: [1, 2, 3]
+                        },
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [1, 2, 3]
+                        },
+                        className: 'btn btn-secondary'
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [1, 2, 3]
+                        },
+                        className: 'btn btn-primary'
+                    }
+                ],
+                "ajax": {
+                    "url": "/Equipments/GetEquips",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "id",
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    { "data": "name" },
+                    { "data": "equipmentTypeName" },
+                    { "data": "equipmentTypeDescription" },
+                    { "data": "quantity" },
+                    { "data": "statuses" },
+                    {
+                        "data": "creationTime",
+                        "render": function (d) {
+                            return moment(d).format('LLL');
+                        }
+                    },
+                    {
+                        render: function (a, t, data, n) {
+                            return `\n <div style="text-align: center">\n
+                                                                    \n <div class="btn-group">\n
+                                                                        <button type="button" class="btn btn-danger dropdown-toggle" style="font-size: 13px;" data-toggle="dropdown">View More
+                                                                        <i class="fa fa-folder"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu" style="text-align: center; min-width:100% !important" role="menu">
+                                                                            <li><a class="edit" href="/Equipments/Details/`+ data.id + `"> Details   <i class="fa fa-folder-open"></i></a></li>
+                                                                            <li><a class="edit" href="/Equipments/Edit/`+ data.id + `">  Edit   <i class="fa fa-edit"></i></a></li>
+                                                                            <li><a class="edit" href="/Equipments/Delete/`+ data.id + `">  Delete   <i class="fa fa-edit"></i></a></li>
+                                                                        </ul>
+                                                                   \n </div>\n`
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No <b >data</b> found"
+                }
+            });
+        });
+        $(document).ready(function () {
+            table.buttons().container()
+                .appendTo('#example_wrapper .col-md-6:eq(0)');
+        });
+
+    </script>
+}
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EquipmentTypeId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeletionDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsDeleted)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EquipmentTypeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeletionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDeleted)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@
